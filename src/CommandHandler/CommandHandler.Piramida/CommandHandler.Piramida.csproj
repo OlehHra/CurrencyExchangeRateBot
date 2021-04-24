@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommandHandler.Interfaces\CommandHandler.Interfaces.csproj" />
+    <ProjectReference Include="..\..\ExchangeRateReader.Interfaces\ExchangeRateReader.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Helper\ExchangeRateTextBuilderHelper\ExchangeRateTextBuilderHelper.csproj" />
+  </ItemGroup>
+
+</Project>

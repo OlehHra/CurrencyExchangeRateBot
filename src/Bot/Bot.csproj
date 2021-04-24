@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+    <PackageReference Include="Telegram.Bot" Version="15.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BankReaders\BankReader.Lion\BankReader.Lion.csproj" />
+    <ProjectReference Include="..\BankReaders\BankReader.Mono\BankReader.Mono.csproj" />
+    <ProjectReference Include="..\BankReaders\BankReader.Piramida\BankReader.Piramida.csproj" />
+    <ProjectReference Include="..\BankReaders\BankReader.Privat\BankReader.Privat.csproj" />
+    <ProjectReference Include="..\BankReaders\BankReader.Rulya\BankReader.Rulya.csproj" />
+    <ProjectReference Include="..\CommandHandler.Interfaces\CommandHandler.Interfaces.csproj" />
+    <ProjectReference Include="..\CommandHandler\CommandHandler.Lion\CommandHandler.Lion.csproj" />
+    <ProjectReference Include="..\CommandHandler\CommandHandler.Mono\CommandHandler.Mono.csproj" />
+    <ProjectReference Include="..\CommandHandler\CommandHandler.Piramida\CommandHandler.Piramida.csproj" />
+    <ProjectReference Include="..\CommandHandler\CommandHandler.Privat\CommandHandler.Privat.csproj" />
+    <ProjectReference Include="..\CommandHandler\CommandHandler.Rulya\CommandHandler.Rulya.csproj" />
+  </ItemGroup>
+
+</Project>
