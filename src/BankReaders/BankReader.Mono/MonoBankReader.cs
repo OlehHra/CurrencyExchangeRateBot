@@ -7,6 +7,7 @@ using System.Timers;
 using BankReader.Mono.Models;
 using ExchangeRateReader.Interfaces;
 using ExchangeRateReader.Interfaces.Modes;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace BankReader.Mono
@@ -14,8 +15,9 @@ namespace BankReader.Mono
     public class MonoBankReader : ExchangeRateReaderBase, IExchangeRateReader
     {
 
-        public MonoBankReader(CurrencyExchangeRateConfig config) : base(config)
+        public MonoBankReader(ILogger logger, CurrencyExchangeRateConfig config) : base(logger, config)
         {
+            Name = "Mono";
             UpdateRate = Update;
             Start();
         }

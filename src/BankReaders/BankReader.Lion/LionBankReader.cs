@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 using ExchangeRateReader.Interfaces;
 using ExchangeRateReader.Interfaces.Modes;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 
 namespace BankReader.Lion
 {
     public class LionBankReader : ExchangeRateReaderBase, IExchangeRateReader
     {
-        public LionBankReader(CurrencyExchangeRateConfig config) : base(config)
+        public LionBankReader(ILogger logger, CurrencyExchangeRateConfig config) : base(logger, config)
         {
+            Name = "Lion";
             UpdateRate = Update;
             Start();
         }

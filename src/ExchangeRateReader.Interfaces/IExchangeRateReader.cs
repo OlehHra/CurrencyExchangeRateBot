@@ -6,6 +6,7 @@ namespace ExchangeRateReader.Interfaces
 {
     public interface IExchangeRateReader
     {
+        string Name { get; }
         Task<List<CurrencyExchangeRate>> GetCurrentRate();
     }
 }

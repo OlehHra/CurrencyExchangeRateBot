@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Threading.Tasks;
 
 namespace CommandHandler.Interfaces
 {
@@ -7,6 +8,7 @@ namespace CommandHandler.Interfaces
         string Command { get;  }
         string Name { get;  }
         ITextCommandHandler SetNext(ITextCommandHandler handler);
+        ITextCommandHandler GetNext();
         Task<string> Handle(long chatId, string command);
     }
 }

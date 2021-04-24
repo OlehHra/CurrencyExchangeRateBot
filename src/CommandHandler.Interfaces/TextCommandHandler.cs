@@ -14,6 +14,11 @@ namespace CommandHandler.Interfaces
             return _nextHandler = handler;
         }
 
+        public ITextCommandHandler GetNext()
+        {
+            return _nextHandler;
+        }
+
         public virtual Task<string> Handle(long chatId, string request)
         {
             if (_nextHandler == null)

@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 using BankReader.Privat.Models;
 using ExchangeRateReader.Interfaces;
 using ExchangeRateReader.Interfaces.Modes;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace BankReader.Privat
 {
     public class PrivatBankReader : ExchangeRateReaderBase, IExchangeRateReader
     {
-        public PrivatBankReader(CurrencyExchangeRateConfig config) : base(config)
+        public PrivatBankReader(ILogger logger, CurrencyExchangeRateConfig config) : base(logger, config)
         {
+            Name = "Privat";
             UpdateRate = Update;
             Start();
         }

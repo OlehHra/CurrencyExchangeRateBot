@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 using ExchangeRateReader.Interfaces;
 using ExchangeRateReader.Interfaces.Modes;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 
 namespace BankReader.Piramida
 {
     public class PiramidaBankReader : ExchangeRateReaderBase, IExchangeRateReader
     {
-        public PiramidaBankReader(CurrencyExchangeRateConfig config) : base(config)
+        public PiramidaBankReader(ILogger logger, CurrencyExchangeRateConfig config) : base(logger, config)
         {
+            Name = "Piramida";
             UpdateRate = Update;
             Start();
         }

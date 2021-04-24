@@ -1,16 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExchangeRateReader.Interfaces;
 using ExchangeRateReader.Interfaces.Modes;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 
 namespace BankReader.Rulya
 {
     public class RulyaBankReader : ExchangeRateReaderBase, IExchangeRateReader
     {
-        public RulyaBankReader(CurrencyExchangeRateConfig config) : base(config)
+        public RulyaBankReader(ILogger logger, CurrencyExchangeRateConfig config) : base(logger, config)
         {
+            Name = "Rulya";
             UpdateRate = Update;
             Start();
         }

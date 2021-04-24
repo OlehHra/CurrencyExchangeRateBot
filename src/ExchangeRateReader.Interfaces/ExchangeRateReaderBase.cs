@@ -4,22 +4,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using ExchangeRateReader.Interfaces.Modes;
+using Microsoft.Extensions.Logging;
 using Timer = System.Timers.Timer;
 
 namespace ExchangeRateReader.Interfaces
 {
     public abstract class ExchangeRateReaderBase
     {
+        protected readonly ILogger Logger;
         private readonly ManualResetEvent _resetEvent = new(false);
         private List<CurrencyExchangeRate> _cache;
         public CurrencyExchangeRateConfig Config { get; }
+        public string Name { get; protected set; }
 
 
         protected Func<Task<List<CurrencyExchangeRate>>> UpdateRate;
 
 
-        protected ExchangeRateReaderBase(CurrencyExchangeRateConfig config)
+        protected ExchangeRateReaderBase(ILogger logger, CurrencyExchangeRateConfig config)
         {
+            Logger = logger;
             Config = config;
             var t = new Timer(Config.UpdateInterval.TotalMilliseconds);
             t.Elapsed += Update;
@@ -28,19 +32,33 @@ namespace ExchangeRateReader.Interfaces
 
         protected void Start()
         {
-            Update(null, null);
+            try
+            {
+                Update(null, null);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.ToString());
+            }
         }
 
         private async void Update(object sender, ElapsedEventArgs e)
         {
-            if (UpdateRate != null)
+            try
             {
-                var rates = await UpdateRate();
-                SetCache(rates);
+                if (UpdateRate != null)
+                {
+                    var rates = await UpdateRate();
+                    SetCache(rates);
+                }
+                else
+                {
+                    throw new NotImplementedException(nameof(Update));
+                }
             }
-            else
+            catch (Exception exception)
             {
-                throw new NotImplementedException(nameof(Update));
+                Logger.LogError(exception.ToString());
             }
         }
 
