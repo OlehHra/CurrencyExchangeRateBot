@@ -20,9 +20,8 @@ namespace Bot.Domain
     {
         private readonly ILogger _logger;
         private readonly AppSettings _appSettings;
-
-        private List<ExchangeRateReaderBase> _rateReaderBases = new List<ExchangeRateReaderBase>();
-        private List<IExchangeRateReader> _rateReaders = new List<IExchangeRateReader>();
+        
+        private readonly List<IExchangeRateReader> _rateReaders = new List<IExchangeRateReader>();
 
         public CommandFactory(ILogger logger, AppSettings appSettings)
         {
@@ -57,7 +56,7 @@ namespace Bot.Domain
                         throw new Exception($"There is no reader for '{name}'");
                     }
 
-                    ITextCommandHandler instance = (ITextCommandHandler) Activator.CreateInstance(type, reader);
+                    ITextCommandHandler instance = (ITextCommandHandler) Activator.CreateInstance(type, _logger, reader);
                     if (root == null)
                     {
                         root = last = instance;

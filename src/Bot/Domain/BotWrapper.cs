@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -22,15 +23,18 @@ namespace Bot
     internal sealed class BotWrapper : IDisposable
     {
         private readonly ILogger _logger;
+        private readonly ILogger _userLog;
         private readonly ICommandFactory _factory;
         private readonly AppSettings _settings;
         private readonly ITelegramBotClient _botClient;
         private ITextCommandHandler _textCommandHandlers;
         private InlineKeyboardMarkup _inlineKeyboardMarkups;
 
-        public BotWrapper(ILogger logger, ICommandFactory factory, AppSettings settings)
+
+        public BotWrapper(ILoggerFactory logFactory, ICommandFactory factory, AppSettings settings)
         {
-            _logger = logger;
+            _logger = logFactory.CreateLogger("general");
+            _userLog = logFactory.CreateLogger("users");
             _factory = factory;
             _settings = settings;
             _botClient = new TelegramBotClient(settings.Token);
@@ -72,7 +76,7 @@ namespace Bot
 
 
             var buttons = new List<List<InlineKeyboardButton>>();
-            
+
             for (int i = 0; i < commands.Count;)
             {
                 if (i == 0)
@@ -97,7 +101,7 @@ namespace Bot
                 {
                     var list = new List<InlineKeyboardButton>();
                     list.Add(InlineKeyboardButton.WithCallbackData(commands[i].Name, commands[i++].Command));
-                    if(i < commands.Count)
+                    if (i < commands.Count)
                     {
                         list.Add(InlineKeyboardButton.WithCallbackData(commands[i].Name, commands[i++].Command));
                     }
@@ -110,18 +114,35 @@ namespace Bot
             _inlineKeyboardMarkups = new InlineKeyboardMarkup(buttons);
         }
 
+        private ConcurrentDictionary<long, string> users = new ConcurrentDictionary<long, string>();
         private async void BotClientOnOnMessage(object sender, MessageEventArgs e)
         {
-            if (e.Message.Type == MessageType.Text && e.Message.Text == "/start")
+            try
             {
-                await _botClient.SendTextMessageAsync(e.Message.Chat.Id,
-                    replyMarkup: _inlineKeyboardMarkups,
-                    text: "Оберіть банк").ConfigureAwait(false); ;
+                if (e.Message.Type == MessageType.Text && e.Message.Text == "/start")
+                {
+                    await _botClient.SendTextMessageAsync(e.Message.Chat.Id,
+                        replyMarkup: _inlineKeyboardMarkups,
+                        text: "Оберіть банк").ConfigureAwait(false);
+
+                    if (!users.ContainsKey(e.Message.Chat.Id))
+                    {
+                        users.TryAdd(e.Message.Chat.Id, $"{e.Message.Chat.FirstName} {e.Message.Chat.LastName}");
+                        _userLog.LogInformation($"{e.Message.Chat.Id}: {users[e.Message.Chat.Id]}");
+                    }
+                }
+                
             }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception.ToString());
+            }
+            
         }
 
         private async void BotClientOnOnCallbackQuery(object sender, CallbackQueryEventArgs e)
         {
+
             try
             {
                 var response = await _textCommandHandlers
@@ -140,12 +161,27 @@ namespace Bot
             }
             catch (MessageIsNotModifiedException)
             {
-                // todo: avoid this exception
-                await _botClient.AnswerCallbackQueryAsync(e.CallbackQuery.Id, string.Empty).ConfigureAwait(false); ;
+                try
+                {
+                    // todo: avoid this exception
+                    await _botClient.AnswerCallbackQueryAsync(e.CallbackQuery.Id, string.Empty).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError(exception.ToString());
+                }
             }
             catch (Exception exception)
             {
-                await _botClient.AnswerCallbackQueryAsync(e.CallbackQuery.Id, exception.Message).ConfigureAwait(false); ;
+                try
+                {
+                    await _botClient.AnswerCallbackQueryAsync(e.CallbackQuery.Id, exception.Message).ConfigureAwait(false);
+                }
+                catch (Exception innerException)
+                {
+                    _logger.LogError(exception.ToString());
+                    _logger.LogError(innerException.ToString());
+                }
             }
         }
 

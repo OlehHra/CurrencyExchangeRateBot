@@ -12,8 +12,8 @@ namespace ExchangeRateReader.Interfaces
     public abstract class ExchangeRateReaderBase
     {
         protected readonly ILogger Logger;
-        private readonly ManualResetEvent _resetEvent = new(false);
-        private List<CurrencyExchangeRate> _cache;
+        private readonly ManualResetEvent _resetEvent = new(true);
+        private List<CurrencyExchangeRate> _cache = new List<CurrencyExchangeRate>();
         public CurrencyExchangeRateConfig Config { get; }
         public string Name { get; protected set; }
 

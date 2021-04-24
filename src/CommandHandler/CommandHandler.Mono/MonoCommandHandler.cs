@@ -2,19 +2,20 @@
 using CommandHandler.Interfaces;
 using ExchangeRateReader.Interfaces;
 using ExchangeRateTextBuilderHelper;
+using Microsoft.Extensions.Logging;
 
 namespace CommandHandler.Mono
 {
     public class MonoCommandHandler : TextCommandHandler
     {
         private readonly IExchangeRateReader _exchangeRateReader;
-        public MonoCommandHandler(IExchangeRateReader exchangeRateReader)
+        public MonoCommandHandler(ILogger logger, IExchangeRateReader exchangeRateReader) : base(logger)
         {
             _exchangeRateReader = exchangeRateReader;
             Command = "/mono";
             Name = "Monobank";
         }
-        public MonoCommandHandler(IExchangeRateReader exchangeRateReader, ITextCommandHandler handler) : this(exchangeRateReader)
+        public MonoCommandHandler(ILogger logger, IExchangeRateReader exchangeRateReader, ITextCommandHandler handler) : this(logger, exchangeRateReader)
         {
             base.SetNext(handler);
         }

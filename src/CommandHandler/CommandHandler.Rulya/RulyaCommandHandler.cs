@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CommandHandler.Interfaces;
 using ExchangeRateReader.Interfaces;
 using ExchangeRateTextBuilderHelper;
+using Microsoft.Extensions.Logging;
 
 namespace CommandHandler.Rulya
 {
@@ -9,13 +11,13 @@ namespace CommandHandler.Rulya
     {
         private readonly IExchangeRateReader _exchangeRateReader;
 
-        public RulyaCommandHandler(IExchangeRateReader exchangeRateReader)
+        public RulyaCommandHandler(ILogger logger, IExchangeRateReader exchangeRateReader) : base(logger)
         {
             _exchangeRateReader = exchangeRateReader;
             Command = "/rulya";
             Name = "Rulya-bank";
         }
-        public RulyaCommandHandler(IExchangeRateReader exchangeRateReader, ITextCommandHandler handler) : this(exchangeRateReader)
+        public RulyaCommandHandler(ILogger logger, IExchangeRateReader exchangeRateReader, ITextCommandHandler handler) : this(logger, exchangeRateReader)
         {
             base.SetNext(handler);
         }

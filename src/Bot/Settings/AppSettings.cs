@@ -8,6 +8,7 @@ namespace Bot.Settings
     {
         public string Token { get; set; }
         public int ExchangeUpdateIntervalSec { get; set; }
+        public bool LogUsers { get; set; }
         public BankSetting[] BankSettings { get; set; }
     }
 

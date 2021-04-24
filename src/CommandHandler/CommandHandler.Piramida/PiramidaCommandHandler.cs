@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using CommandHandler.Interfaces;
 using ExchangeRateReader.Interfaces;
 using ExchangeRateTextBuilderHelper;
+using Microsoft.Extensions.Logging;
 
 namespace CommandHandler.Piramida
 {
@@ -10,13 +11,14 @@ namespace CommandHandler.Piramida
     {
         private readonly IExchangeRateReader _exchangeRateReader;
 
-        public PiramidaCommandHandler(IExchangeRateReader exchangeRateReader)
+        public PiramidaCommandHandler(ILogger logger, IExchangeRateReader exchangeRateReader) : base(logger)
         {
             _exchangeRateReader = exchangeRateReader;
             Command = "/piramida";
             Name = "Piramida";
         }
-        public PiramidaCommandHandler(IExchangeRateReader exchangeRateReader, ITextCommandHandler handler) : this(exchangeRateReader)
+        public PiramidaCommandHandler(ILogger logger, IExchangeRateReader exchangeRateReader, ITextCommandHandler handler) 
+            : this(logger, exchangeRateReader)
         {
             base.SetNext(handler);
         }

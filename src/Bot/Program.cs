@@ -50,7 +50,7 @@ namespace Bot
 
             var factory = provider.GetService<ILoggerFactory>();
             factory.AddNLog();
-
+                
             var logger = factory.CreateLogger("general");
             logger.LogInformation($"{new string('-', 10)} Start {new string('-', 10)}");
 
@@ -61,7 +61,7 @@ namespace Bot
 
 
 
-            var bot = new BotWrapper(logger, commandFactory, settings);
+            var bot = new BotWrapper(factory, commandFactory, settings);
             await bot.Init().ConfigureAwait(false);
 
             bool isWorking = true;

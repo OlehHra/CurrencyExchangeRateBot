@@ -2,19 +2,20 @@
 using CommandHandler.Interfaces;
 using ExchangeRateReader.Interfaces;
 using ExchangeRateTextBuilderHelper;
+using Microsoft.Extensions.Logging;
 
 namespace CommandHandler.Privat
 {
     public class PrivatCommandHandler : TextCommandHandler
     {
         private readonly IExchangeRateReader _exchangeRateReader;
-        public PrivatCommandHandler(IExchangeRateReader exchangeRateReader)
+        public PrivatCommandHandler(ILogger logger, IExchangeRateReader exchangeRateReader) : base(logger)
         {
             _exchangeRateReader = exchangeRateReader;
             Command = "/privat";
             Name = "ПриватБанк";
         }
-        public PrivatCommandHandler(IExchangeRateReader exchangeRateReader, ITextCommandHandler handler) : this(exchangeRateReader)
+        public PrivatCommandHandler(ILogger logger, IExchangeRateReader exchangeRateReader, ITextCommandHandler handler) : this(logger, exchangeRateReader)
         {
             base.SetNext(handler);
         }
